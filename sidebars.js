@@ -18,6 +18,11 @@ const sidebars = {
     //   ],
     // },
     {
+      type: "doc",
+      label: "Glossary",
+      id: "basics/glossary"
+    },
+    {
       type: "category",
       label: "Whitepapers",
       items: [
