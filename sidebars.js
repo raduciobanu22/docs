@@ -100,24 +100,13 @@ const sidebars = {
   build: [
     { type: "doc", label: "Introduction", id: "build/introduction" },
     { type: "doc", label: "Quickstart", id: "basics/quickstart" },
-    // {
-    //   type: "category",
-    //   label: "Basics",
-    //   items: [
-    //     { type: "doc", label: "Installation", id: "build/basics/installation" },
-    //     {
-    //       type: "doc",
-    //       label: "Set up an editor",
-    //       id: "build/basics/set-up-an-editor",
-    //     },
-    //     {
-    //       type: "doc",
-    //       label: "Create a dApp",
-    //       id: "build/basics/create-a-dapp",
-    //     },
-    //     { type: "doc", label: "Learn more", id: "build/basics/learn-more" },
-    //   ],
-    // },
+    {
+      type: "category",
+      label: "Smart Contracts",
+      items: [
+        { type: "doc", label: "Create a token", id: "build/smart-contracts/create-a-token" }
+      ]
+    },
     { type: "doc", label: "Tools", id: "build/resources/useful-tools" },
     {
       type: "category",
