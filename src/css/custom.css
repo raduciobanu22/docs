@@ -257,3 +257,8 @@ html[data-theme="dark"] {
   --ifm-background-color: #111214;
   --ifm-background-surface-color: #18191a;
 }
+
+pre {
+  overflow-y: auto;
+  max-height: 400px;
+}
