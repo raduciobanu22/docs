@@ -21,7 +21,7 @@ In order to write an application for Kadena, you need to have some knowledge of 
 
 ## Kadena Development Key Concepts
 
-You only need a few minutes to setup your development environment for Kadena but it's important to have a basic understanding of some general concepts before jumping to writing code.
+You only need a few minutes to setup your development environment for Kadena. Still it's essential to have a basic understanding of some general concepts before jumping to writing code.
 
 1. **Pact** - Turing-incomplete smart contract language that has been purpose-built with blockchains first in mind. Pact focuses on facilitating transactional logic with the optimal mix of functionality in authorization, data management, and workflow.
 
@@ -36,7 +36,7 @@ You only need a few minutes to setup your development environment for Kadena but
 
 Pact is an interpreted programming language which makes it human-readable allowing anyone to check any smart contract deployed on Kadena blockchain.
 
-Installing Pact can be done using Homebrew on Mac or Nix for Linux distributions. If you're on Mac simply run `brew install pact` in your terminal. To build with Nix follow the [instructions from the official Pact repository](https://github.com/kadena-io/pact#building-with-nix).
+Installing Pact can be done using Homebrew on Mac or Nix for Linux distributions. If you're on Mac simply run `brew install kadena-io/pact/pact` in your terminal. To build with Nix follow the [instructions from the official Pact repository](https://github.com/kadena-io/pact#building-with-nix).
 
 Once you have installed it you can use it on the command line to execute Pact code:
 
@@ -70,6 +70,10 @@ To import `pact-lang-api` into your Node.js project or Browserify front-end app 
 
 ```js
 const Pact = require('pact-lang-api);
+
+// or
+
+import Pact from 'pact-lang-api';
 ```
 
 ### Running Pact Server
@@ -113,7 +117,7 @@ You can also check the Pact official repository for [instructions on using other
 
 Our development environment is ready and we have an understanding of basic Kadena concepts, it's now time to write a first Dapp.
 
-After you complete this guide, you can follow a mode advanced tutorial to build a voting Dapp.
+After you complete this guide, you can follow a more advanced tutorial to build a voting Dapp.
 
 ### Configure Your Project And Local Development Environment
 
@@ -334,5 +338,5 @@ You can notice that it automatically chose a different port `8081` since Pact lo
 
 When the page is loaded, the "Hello from Kadena ⛓🕸!" message is retrieved as a result of calling the `kapy.hello` smart contract function that we've deployed to our local pact server.
 
-Congratulations! You've done it, our first Kadena Dapp is completed!. We hope this guide was useful to quickly learn the basics of Kadena Dapp development. For more advanced tutorials visit our [tutorials section](#).
+Congratulations! You've done it, our first Kadena Dapp is completed! We hope this guide was useful to quickly learn the basics of Kadena Dapp development. For more advanced tutorials visit our [tutorials section](#).
 
