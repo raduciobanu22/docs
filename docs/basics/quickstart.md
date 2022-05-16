@@ -1,196 +1,342 @@
 ---
-title: Kadena Quickstart
-description: Learn Kadena’s core concepts & tools for development in 15 minutes
+title: Kadena Quick Start Guide
+description: Setting up a Kadena Development Environment
 ---
 
 import PageRef from '@components/PageRef'
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Quickstart
+# Setting up a Kadena Development Environment
 
-Learn Kadena’s core concepts & tools for development in 15 minutes.
+Quick Start Guide.
 
 ---
 
-## Welcome to the developer-friendly blockchain.
+Kadena's Chainweb is a horizontally scalable proof-of-work blockchain that together with the Pact smart contract programming language offers a complete platform for builders to develop and launch state-of-the-art decentralized applications.
 
-Building useful applications on a blockchain doesn’t have to be hard or expensive. This Developer Quickstart is designed to remove the friction from onboarding so that you can understand how to build with Kadena quickly and easily.
+Chainweb is a public network and anyone can invoke write and read operations to and from the blockchain. Developers can write software called smart contracts that are deployed to Chainweb's network of 20 chains.
 
-## Sign the Memory Wall
+In order to write an application for Kadena, you need to have some knowledge of smart contract architecture and understanding of basic cryptography concepts such as digital signatures, public-private key pairs and hash functions.
 
-Engrave your name on the Kadena “Memory Wall” smart contract.
+## Kadena Development Key Concepts
 
-**What you will accomplish**
+You only need a few minutes to setup your development environment for Kadena. Still it's essential to have a basic understanding of some general concepts before jumping to writing code.
 
-- Perform a real mainnet transaction
-- View your transaction on the Block Explorer
+1. **Pact** - Turing-incomplete smart contract language that has been purpose-built with blockchains first in mind. Pact focuses on facilitating transactional logic with the optimal mix of functionality in authorization, data management, and workflow.
 
-### Step-by-step instructions
+2. **Pact-Lang-Api.js** - A Javascript library for web browsers and Node.js that enables developers to easily read and write to the Kadena blockchain.
 
-1. Go to [hello.chainweb.com](https://hello.chainweb.com)
-2. Type your name, then submit
-3. Wait for the transaction to be mined in a block
-4. Upon success, click the Block Explorer link or go to explorer.chainweb.com to find your transaction under “Recent Transactions”
+3. **Pact Local Server** - A full REST API HTTP server and SQLite database implementation that simulates a single-node blockchain environment, with the same API supported by the Kadena Chainweb blockchain.
 
-:::note Key takaway
+4. **Atom IDE** - Atom editor together with `language-pact` package offers a full-fledged IDE experience to seamlessly write Pact code.
 
-Something hidden just allowed you to instantly interact with a real blockchain, yet you did not have to create an account or own tokens to pay the transaction’s gas. This is possible thanks to gas stations, an autonomous account that exists only to fund gas payments on behalf of other users under specific conditions. By having a gas station pay user onboarding costs, we remove the friction of acquiring tokens in advance of signup, which allows a user’s first interaction with a dApp to become as easy as filling out a web form.
 
-:::s
+### Installing Pact
 
-### Additional Resources
+Pact is an interpreted programming language which makes it human-readable allowing anyone to check any smart contract deployed on Kadena blockchain.
 
-- Read more about gas stations [here](https://medium.com/kadena-io/the-first-crypto-gas-station-is-now-on-kadenas-blockchain-6dc43b4b3836).
-- [See the Smart Contract Code For Memory Wall](https://github.com/kadena-io/developer-scripts/tree/master/pact/dapp-contracts/memory-wall)
+Installing Pact can be done using Homebrew on Mac or Nix for Linux distributions. If you're on Mac simply run `brew install kadena-io/pact/pact` in your terminal. To build with Nix follow the [instructions from the official Pact repository](https://github.com/kadena-io/pact#building-with-nix).
 
-## Install Chainweaver
+Once you have installed it you can use it on the command line to execute Pact code:
 
-Download Chainweaver, Kadena’s official wallet and developer workbench.
+```bash
+pact> (+ 1 2)
+3
+```
 
-### What you will accomplish
+### Installing pact-lang-api.js
 
-- Setup a secure KDA wallet
-- Get introduced to Kadenar's primary developer workbench & IDE
+`pact-lang-api.js` is a library to interact with Kadena blockchain. To use it in a web page, you can import it directly using a CDN and `Pact` will be available as a global variable:
 
-### Step-by-step instructions
+ ```js
+ <script src="https://cdn.jsdelivr.net/npm/pact-lang-api@4.1.2/pact-lang-api-global.min.js"></script>
+ ```
 
-1. Go to [kadena.io/chainweaver](https://kadena.io/chainweaver-tos/)
-2. Download desktop version for macOS, Linux or Windows
-3. Open Chainweaver and follow the 3-step process for creating a new wallet:
+To install it for a Node.js script/backend application or for a built front-end project, you can use NPM or Yarn.
 
-- Set password
-- Record recovery phrase
-- Verify recovery phrase
+```bash
 
-Detailed set-up instructions can be found in the [Chainweaver User Guide](chainweaver/chainweaver-user-guide).
+npm install pact-lang-api
 
-:::note Key Takeaways
+# or
 
-While many blockchains require a suite of tools to perform various tasks, Kadena’s Chainweaver is designed as a one-stop-shop for interacting with the blockchain.
+yarn add pact-lang-api
+```
 
-As a cryptocurrency wallet, Chainweaver can:
+If you used the CDN approach, there's nothing else to do, you can directly use the lib in your code.
 
-• Deterministically generate multiple key pairs
-• Configure and manage multiple accounts, each with custom access controls
-• Send & receive KDA across any Kadena chain, and adjust gas preferences
-• Watch the status of existing accounts (like an address book of known accounts)
-• Change networks to interact with Mainnet, Testnet, or a custom network
+To import `pact-lang-api` into your Node.js project or Browserify front-end app use the following line:
 
-As a development environment, Chainweaver can:
+```js
+const Pact = require('pact-lang-api);
 
-• Expose all the features available in the Pact smart contract language
-• Perform common IDE functionality: code editor, automation tools, error messages
-• Facilitate the testing of contracts with a REPL
-• Preview results and deploy smart contracts to any Kadena network
-• Display a list of example contracts
-• View code and call functions from any deployed smart contract
-• Automate transaction signing between dApps and accounts
+// or
 
-:::
+import Pact from 'pact-lang-api';
+```
 
-## Testnet Account Setup
+### Running Pact Server
 
-Create and fund a Testnet account using the “Coin Faucet” smart contract
+Pact Local Server is a great tool for Kadena development and testing. You can use it to deploy smart contracts and interact with them as if they were on a real network.
+Pact Server is part of the `pact` command line tool that you [already installed](#installing-pact). To run the server you just need a configuration file. Copy the example below and save it as `config.yaml`.
 
-### What you will accomplish
+```bash
+# Config file for pact http server. Launch with `pact -s config.yaml`
 
-- Create an account
-- Get some testnet KDA coins
+# HTTP server port
+port: 8080
 
-### Step-by-step instructions
+# directory for HTTP logs
+logDir: log
 
-1. In the Keys section of Chainweaver, copy your public key
-2. Go to [faucet.testnet.chainweb.com](https://faucet.testnet.chainweb.com/)
-3. Select “Create and fund new account”
-4. In the “Public Key” field, enter your public key
-5. In the “Account Name” field, enter some unique name.
+# persistence directory
+persistDir: log
 
-:::note
+# SQLite pragmas for pact back-end
+pragmas: []
 
-For beginners it is recommended that you name your account after your public key. This is a standard convention in blockchain and may help to reduce confusion about which key is associated with your account.
+# verbose: provide log output
+verbose: True
+```
 
-:::
+Now create the logs directory and start the server:
 
-6. Select “Create and fund new account”
-7. Wait about 30 seconds, then select “Check Request Status” to see the transaction confirmation message.
+```bash
+mkdir log
+pact -s config.yaml
+```
 
-:::note Key Takeaway
+### Installing Atom and language-pact
 
-Keys and Accounts are not the same thing. In brief, Keys sign transactions and Accounts may be governed by one or multiple keys.
+Pact is supported by a variety of editors like Atom, Emacs or Vim. For a full-fledged IDE experience, install the [Atom](https://atom.io) editor along with `language-pact` package using the [atom package manager](https://flight-manual.atom.io/using-atom/sections/atom-packages/).
 
-With most blockchains, accounts are modeled as simply public/private keypairs. This one-to-one model keeps things simple, but runs into problems when account control requires a many-to-many model (such as with jointly owned or majority ruled accounts).
+You can also check the Pact official repository for [instructions on using other editors](https://github.com/kadena-io/pact#supported-editors).
 
-Kadena natively supports multiple keys governing the same account, and this dynamic account control allows developers to more easily construct governance models that satisfy their workflow requirements.
+## Building Your First DApp
 
-:::
+Our development environment is ready and we have an understanding of basic Kadena concepts, it's now time to write a first Dapp.
 
-### Additional Resources
+After you complete this guide, you can follow a more advanced tutorial to build a voting Dapp.
 
-- [See The Smart Contract Code For Coin Faucet](https://github.com/kadena-io/developer-scripts/tree/master/pact/dapp-contracts/faucet)
+### Configure Your Project And Local Development Environment
 
-## Pacty Parrots
+Create a directory on your local machine for your Dapp project files.
 
-Play “Pacty Parrots” game to see how dApps and wallets interact.
+```bash
+mkdir first-kadena-dapp
+cd first-kadena-dapp
+mkdir pact
+```
 
-### What you will accomplish
+Next run the following command to create a `package.json` file that will keep track of our project's dependencies:
 
-- Sign a transaction
-- See how dApps interact with wallets
-- Win some coins! (maybe)
+```bash
+npm init -y
 
-### Step-by-step instructions
+# or
 
-1. Make sure Chainweaver is still open on your computer
-2. Go to [pactyparrots.testnet.chainweb.com](http://pactyparrots.testnet.chainweb.com/)
-3. Skim through the game rules, then enter the account name you recently created
-4. Select “Start new round” to begin the game
-5. When Chainweaver pops up you will be prompted with a signing request which has 3 parts:
+yarn init -y
+```
 
-- Configuration: Vew transaction info and adjust settings if desired
-- Sign: Select your account name in each of the 3 “Grant Capabilities” fields
-- Preview: You should see a Raw Response of “Write succeeded!” If so, select “Submit”
+Earlier we've already mentioned how to [install pact-lang-api](#installing-pact-lang-apijs), use the same commands to install it as a dependency to our new project. Additionally we'll also add the `http-server` package:
 
-6. Watch the parrots dance and wait for your result.
-7. Choose to “Spin again” or “Cash out” which will prompt another transaction to sign via Chainweaver.
+```bash
+npm install http-server
+```
 
-:::note Key Takeaways
+Now we've got everything we need to build our first Dapp.
 
-For developers and end users, navigating wallet-dApp interaction can be a challenging experience. For example, developing with Ethereum requires wallets and dApps to integrate intricate web3.js code in order to perform necessary signing operations.
+### Writing a Smart Contract with Pact
 
-Kadena simplifies this interaction with a signing API. There is no need to embed a web browser or to store private keys in a browser plug-in.
+We are going to write our smart contract in a file called `kapy.pact`.
 
-As a developer on Kadena, when your dApp needs to send a signed transaction, simply make an AJAX request to the signing API on localhost port 9467. Then the user's wallet will handle the details of transaction signing.
+```bash
+touch pact/kapy.pact
+```
 
-:::
+Open the Pact file with Atom or another editor of your choice for writing code. Here's the code for our contract:
 
-### Additional Resources
+```clojure
+(module kapy GOVERNANCE
 
-- [See The Smart Contract Code for Pacty Parrots](https://github.com/kadena-io/developer-scripts/tree/master/pact/dapp-contracts/pacty-parrot)
-- [See The Documentation For Implementing Signing API](https://kadena-io.github.io/signing-api/)
+    (defcap GOVERNANCE ()
+        (enforce false "Module is not upgradable"))
 
-## Apply your knowledge to build a brand new dApp
+    (defun hello:string ()
+        (format "Hello from Kadena ⛓🕸!" []))
+)
+```
 
-### What you’ve accomplished
+The contract has a `hello` function that only returns the "Hello from Kadena!" message. Save the file once you are done.
 
-1. Created and funded an account
-2. Performed multiple transactions
-3. Interacted with Mainnet and Testnet
-4. Used a gas station and signing API
-5. Used Block Explorer and Chainweaver
+### Testing With REPL
 
-## What’s Next?
+Next we'll use the Pact built-in REPL tool to test the contract that we just wrote. Create a new file `kapy.repl` and add the following code:
 
-You are now familiar with the core concepts and tools for developing powerful and user-friendly applications with Kadena. Take you learning to the next level with any of these paths:
+```clojure
 
-Follow a guided template to create a complete dApp with a React frontend.
+(begin-tx)
 
-- [Go to create-pact-app](https://github.com/kadena-io/create-pact-app)
+(load "kapy.pact")
 
-Learn Pact, Kadena’s human-readable smart contract language
+(use kapy)
 
-- [Go to Pact Developer Tutorials](/blog)
+(expect "Received hello" (kapy.hello) "Hello from Kadena ⛓🕸!")
 
-Already have a dApp idea? Apply to our Developer Program to get technical and marketing support from Kadena.
+(commit-tx)
 
-- [Go to Developer Program](https://kadena.io/developerprogram)
+```
+Save the file and run it using the pact command line tool:
+
+```bash
+pact>(load "kapy.repl")
+```
+
+If successful you will see the output in your terminal:
+
+```bash
+"Loading pact/kapy.repl..."
+"Begin Tx 0"
+"Loading kapy.pact..."
+"Loaded module kapy, hash KUmsdwEMt_ZWphXBQkrlo3v0BZcwWl2HdwQeil1zKbA"
+"Using kapy"
+"Expect: success: Received a hello message"
+"Commit Tx 0"
+```
+
+### Deploying to Pact Local Server
+
+We know our contract is working correctly so it's time to deploy it. In a separate terminal create a new file called `deploy.js`:
+
+```bash
+touch deploy.js
+```
+
+Add the following code to the file. Running this script will deploy our smart contract to the Pact local server , which should be [running](#running-pact-server) in a separate terminal:
+
+```js
+
+const Pact = require('pact-lang-api');
+const fs = require('fs');
+
+const API_HOST = 'http://localhost:8080';
+const KEY_PAIR = Pact.crypto.genKeyPair();
+const pactCode = fs.readFileSync('./pact/kapy.pact', 'utf8');
+
+deployContract(pactCode);
+
+async function deployContract(pactCode) {
+  const cmd = {
+    keyPairs: KEY_PAIR,
+    pactCode: pactCode
+  };
+  const response = await Pact.fetch.send(cmd, API_HOST);
+  const txResult = await Pact.fetch.listen({ listen: response.requestKeys[0] }, API_HOST);
+  console.log(txResult);
+};
+
+```
+
+Save the file and run it using the following command:
+
+```bash
+node deploy.js
+```
+
+You should see an output similar to the one below which confirms the `kapy` module was successfully deployed:
+
+```bash
+{
+  gas: 0,
+  result: {
+    status: 'success',
+    data: 'Loaded module kapy, hash KUmsdwEMt_ZWphXBQkrlo3v0BZcwWl2HdwQeil1zKbA'
+  },
+  reqKey: 'V0rVJdygJvnij0jPd0bekxFDtlATqC3bWhOowtf1NFI',
+  logs: '56n7Msx_zFcEUEExWy1jt1g28zPIF8MFefP2WM_Wv7A',
+  metaData: null,
+  continuation: null,
+  txId: 0
+}
+```
+
+### Writing the Front-End
+
+On the front-end part, we will call our contract method `hello` from the browser and display the result. Our Dapp does not write anything to the blockchain so we don't need a wallet to sign transactions.
+
+Create an HTML file in your project:
+
+```bash
+touch index.html
+```
+
+We'll add the UI and use `pact-lang-api` to call the smart contract:
+
+```html
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+
+  <h1>First Kadena Dapp</h1>
+  <label>Contract call:</label>
+  <span>kapy.hello</span>
+  <br />
+  <label>Result:</label>
+  <span id="message"></span>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/pact-lang-api@4.1.2/pact-lang-api-global.min.js"></script>
+
+<script>
+
+const API_HOST = 'http://localhost:8080';
+const KEY_PAIR = Pact.crypto.genKeyPair();
+const htmlLabel = document.getElementById('message');
+
+const cmd = {
+  keyPairs: KEY_PAIR,
+  pactCode: '(kapy.hello)'
+};
+
+Pact.fetch.local(cmd, API_HOST).then((response) => {
+  htmlLabel.innerHTML = response.result.data;
+})
+
+</script>
+</html>
+
+
+```
+
+### Running Your DApp
+
+Our Dapp is now ready! We just need to start the HTTP server that will serve our HTML file:
+
+```bash
+npx http-server
+
+Starting up http-server, serving ./
+
+http-server version: 14.1.0
+
+....
+
+Available on:
+  http://127.0.0.1:8081
+  http://172.16.172.16:8081
+  http://192.168.1.41:8081
+  http://10.10.206.91:8081
+```
+You can notice that it automatically chose a different port `8081` since Pact local server is already running on `8080`. We can reach the server at `http://localhost:8081` so open the address in your browser and if everything works correctly you see something similar to the screenshot below:
+
+![first-kadena-dapp](/img/docs/basics/quickstart/first-kadena-dapp.png)
+
+When the page is loaded, the "Hello from Kadena ⛓🕸!" message is retrieved as a result of calling the `kapy.hello` smart contract function that we've deployed to our local pact server.
+
+Congratulations! You've done it, our first Kadena Dapp is completed! We hope this guide was useful to quickly learn the basics of Kadena Dapp development. For more advanced tutorials visit our [tutorials section](#).
+
